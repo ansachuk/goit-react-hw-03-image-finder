@@ -21,7 +21,6 @@ export default class Searchbar extends Component {
 		e.preventDefault();
 
 		const images = await fetchPhotos(this.state.query);
-		console.log(images);
 
 		this.props.onSubmit(images);
 
