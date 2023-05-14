@@ -20,9 +20,11 @@ export default class Searchbar extends Component {
 	onSubmit = async e => {
 		e.preventDefault();
 
-		const images = await fetchPhotos(this.state.query);
+		const { state, props } = this;
 
-		this.props.onSubmit(images);
+		const images = await fetchPhotos(state.query);
+
+		props.onSubmit(images, state.query);
 
 		this.setState({
 			query: "",

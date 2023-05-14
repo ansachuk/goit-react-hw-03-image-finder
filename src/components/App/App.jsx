@@ -4,7 +4,7 @@ import Searchbar from "../Searchbar/Searchbar";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 // import Loader from '../Loader/Loader'
-// import Button from "../Button/Button";
+import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 
 export default class App extends Component {
@@ -12,6 +12,7 @@ export default class App extends Component {
 		images: [],
 		isModalOpen: false,
 		currentModalImg: {},
+		searchQuery: "",
 	};
 
 	onESCPress = e => {
@@ -20,33 +21,45 @@ export default class App extends Component {
 		}
 	};
 
-	onFetchPhotos = photos => {
-		this.setState({ images: [...photos] });
+	onFetchPhotos = (photos, query) => {
+		this.setState({ images: [...photos], searchQuery: `${query}` });
 		// this.setState(state => {
-		// 	return { images: [...state.images, ...photos] };
+		// 	return { images: [...state.images, ...photos], searchQuery: `${query}` };
 		// });
-		// console.log(this.state.images);
 	};
 
 	closeModal = e => {
-		if (e.currentTarget === e.target) {
+		const { currentTarget, target } = e;
+
+		if (currentTarget === target) {
 			this.setState({ isModalOpen: false });
 		}
 	};
 
 	onImgClick = e => {
-		const currentImg = this.state.images.find(image => image.id === Number(e.target.id));
+		const { images } = this.state;
+
+		const currentImg = images.find(image => image.id === Number(e.target.id));
 		this.setState({ currentModalImg: currentImg, isModalOpen: true });
 	};
 
 	render() {
+		const {
+			state: { images, isModalOpen, currentModalImg, searchQuery },
+			onFetchPhotos,
+			onImgClick,
+			onESCPress,
+			closeModal,
+		} = this;
+
 		return (
 			<>
-				<Searchbar onSubmit={this.onFetchPhotos}></Searchbar>
+				<Searchbar onSubmit={onFetchPhotos}></Searchbar>
+
 				<ImageGallery>
-					{this.state.images.map(({ tags, webformatURL, largeImageURL, id }) => (
+					{images.map(({ tags, webformatURL, largeImageURL, id }) => (
 						<ImageGalleryItem
-							onClick={this.onImgClick}
+							onClick={onImgClick}
 							key={id}
 							id={id}
 							webURL={webformatURL}
@@ -55,14 +68,10 @@ export default class App extends Component {
 						/>
 					))}
 				</ImageGallery>
-				{/* <Button /> */}
-				{this.state.isModalOpen && (
-					<Modal
-						onESCPress={this.onESCPress}
-						closeModal={this.closeModal}
-						currentModalImg={this.state.currentModalImg}
-					/>
-				)}
+
+				{searchQuery && <Button />}
+
+				{isModalOpen && <Modal onESCPress={onESCPress} closeModal={closeModal} currentModalImg={currentModalImg} />}
 			</>
 		);
 	}
