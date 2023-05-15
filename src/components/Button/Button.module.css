@@ -28,6 +28,6 @@
 }
 
 .Button:hover,
-.Button:focus {
+.Button:active {
 	background-color: #303f9f;
 }

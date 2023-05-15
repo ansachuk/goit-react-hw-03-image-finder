@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 // import PropTypes from 'prop-types';
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
+import { ReactComponent as SearchIcon } from "../../icons/searc.svg";
 import fetchPhotos from "../../services/fetchPhotos";
 import css from "./Searchbar.module.css";
 
@@ -20,15 +22,29 @@ export default class Searchbar extends Component {
 	onSubmit = async e => {
 		e.preventDefault();
 
-		const { state, props } = this;
+		const {
+			state: { query },
+			props: { toggleLoader, onSubmit },
+		} = this;
 
-		const images = await fetchPhotos(state.query);
+		if (query.trim() !== "") {
+			toggleLoader();
+			const images = await fetchPhotos(query);
 
-		props.onSubmit(images, state.query);
+			onSubmit(images, query);
 
-		this.setState({
-			query: "",
-		});
+			toggleLoader();
+
+			this.setState({
+				query: "",
+			});
+		} else {
+			Notify.warning("Please, enter a query!");
+
+			this.setState({
+				query: "",
+			});
+		}
 	};
 
 	render() {
@@ -36,7 +52,9 @@ export default class Searchbar extends Component {
 			<header className={css.searchbar}>
 				<form className={css.form} onSubmit={this.onSubmit}>
 					<button type="submit" className={css.button}>
-						<span className={css.label}>Search</span>
+						<span className={css.label}></span>
+
+						<SearchIcon />
 					</button>
 
 					<input

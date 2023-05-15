@@ -3,7 +3,7 @@ import { Component } from "react";
 import Searchbar from "../Searchbar/Searchbar";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
-// import Loader from '../Loader/Loader'
+import Loader from "../Loader/Loader";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 
@@ -11,6 +11,7 @@ export default class App extends Component {
 	state = {
 		images: [],
 		isModalOpen: false,
+		showLoader: false,
 		currentModalImg: {},
 		searchQuery: "",
 		currentPage: 1,
@@ -28,6 +29,12 @@ export default class App extends Component {
 				images: [...state.images, ...photos],
 				currentPage: state.currentPage + 1,
 			};
+		});
+	};
+
+	toggleLoader = () => {
+		this.setState(state => {
+			return { showLoader: !state.showLoader };
 		});
 	};
 
@@ -52,17 +59,18 @@ export default class App extends Component {
 
 	render() {
 		const {
-			state: { images, isModalOpen, currentModalImg, searchQuery, currentPage },
+			state: { images, isModalOpen, currentModalImg, searchQuery, currentPage, showLoader },
 			onFetchPhotos,
 			onLoadMoreClick,
 			onImgClick,
 			onESCPress,
 			closeModal,
+			toggleLoader,
 		} = this;
 
 		return (
 			<>
-				<Searchbar onSubmit={onFetchPhotos}></Searchbar>
+				<Searchbar onSubmit={onFetchPhotos} toggleLoader={toggleLoader}></Searchbar>
 
 				<ImageGallery>
 					{images.map(({ tags, webformatURL, largeImageURL, id }) => (
@@ -77,7 +85,11 @@ export default class App extends Component {
 					))}
 				</ImageGallery>
 
-				{searchQuery && <Button onFetch={onLoadMoreClick} query={searchQuery} page={currentPage} />}
+				<Loader visible={showLoader} />
+
+				{searchQuery && (
+					<Button toggleLoader={toggleLoader} onFetch={onLoadMoreClick} query={searchQuery} page={currentPage} />
+				)}
 
 				{isModalOpen && <Modal onESCPress={onESCPress} closeModal={closeModal} currentModalImg={currentModalImg} />}
 			</>
