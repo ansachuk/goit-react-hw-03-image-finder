@@ -1,7 +1,5 @@
 import axios from "axios";
 
-//?fields=name,capital,population,flags,languages`
-
 const AUTH_KEY = "34948813-296850008c19dad8d09f83fef";
 axios.defaults.baseURL = "https://pixabay.com/api/";
 
