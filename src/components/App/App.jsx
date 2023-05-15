@@ -7,6 +7,8 @@ import Loader from "../Loader/Loader";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 
+import makeSmoothScroll from "../../services/smoothScroll";
+
 export default class App extends Component {
 	state = {
 		images: [],
@@ -39,6 +41,10 @@ export default class App extends Component {
 	};
 
 	onFetchPhotos = (photos, query) => {
+		setTimeout(() => {
+			makeSmoothScroll();
+		}, 200);
+
 		this.setState({ images: [...photos], searchQuery: `${query}`, currentPage: 1 });
 	};
 
@@ -73,15 +79,8 @@ export default class App extends Component {
 				<Searchbar onSubmit={onFetchPhotos} toggleLoader={toggleLoader}></Searchbar>
 
 				<ImageGallery>
-					{images.map(({ tags, webformatURL, largeImageURL, id }) => (
-						<ImageGalleryItem
-							onClick={onImgClick}
-							key={id}
-							id={id}
-							webURL={webformatURL}
-							tags={tags}
-							large={largeImageURL}
-						/>
+					{images.map(({ tags, webformatURL, id }) => (
+						<ImageGalleryItem onClick={onImgClick} key={id} id={id} webURL={webformatURL} tags={tags} />
 					))}
 				</ImageGallery>
 

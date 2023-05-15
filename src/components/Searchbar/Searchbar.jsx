@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 import { ReactComponent as SearchIcon } from "../../icons/searc.svg";
@@ -8,7 +8,8 @@ import css from "./Searchbar.module.css";
 
 export default class Searchbar extends Component {
 	static propTypes = {
-		//  prop: PropTypes,
+		toggleLoader: PropTypes.func.isRequired,
+		onSubmit: PropTypes.func.isRequired,
 	};
 
 	state = {

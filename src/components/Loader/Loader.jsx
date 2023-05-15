@@ -1,4 +1,6 @@
 import { MagnifyingGlass } from "react-loader-spinner";
+import PropTypes from "prop-types";
+
 import css from "./Loader.module.css";
 
 export default function Loader({ visible }) {
@@ -15,3 +17,7 @@ export default function Loader({ visible }) {
 		</>
 	);
 }
+
+Loader.propTypes = {
+	visible: PropTypes.bool.isRequired,
+};
